@@ -1,0 +1,27 @@
+# 🚀 AWS Scalable Infrastructure with Terraform
+
+Este projeto provisiona uma **infraestrutura escalável** na AWS usando **Terraform**, incluindo **Auto Scaling, Load Balancer, RDS, CloudWatch e Remote State**.
+
+## 🏗️ Arquitetura
+
+- **VPC** com subnets públicas e privadas.
+- **Auto Scaling Group** para instâncias EC2.
+- **Application Load Balancer (ALB)** para distribuir tráfego.
+- **Amazon RDS** para banco de dados relacional.
+- **CloudWatch** para monitoramento.
+- **Terraform Remote State** armazenado no **S3 + DynamoDB**.
+
+![Arquitetura AWS](docs/architecture-diagram.png)
+
+## 📌 Tecnologias Usadas
+
+- **AWS** (EC2, VPC, ALB, RDS, CloudWatch, IAM)
+- **Terraform** (Infraestrutura como Código)
+- **GitHub Actions** (Opcional: CI/CD)
+
+## 🚀 Como Usar
+
+1. Clone este repositório  
+   ```bash
+   git clone https://github.com/seu-usuario/aws-scalable-infra-terraform.git
+   cd aws-scalable-infra-terraform/terraform

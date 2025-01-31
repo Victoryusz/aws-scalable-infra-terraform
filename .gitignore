@@ -1,0 +1,15 @@
+# Ignorar credenciais da AWS
+*.pem
+*.key
+.aws/
+
+# Ignorar arquivos do Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+crash.log
+
+# Ignorar logs e arquivos temporários
+*.log
+.DS_Store
+.vscode/
