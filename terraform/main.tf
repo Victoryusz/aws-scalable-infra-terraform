@@ -36,3 +36,31 @@ resource "aws_subnet" "private_subnet" {
     }
 }
 
+#Criando o internet Gateway 
+resource "aws_internet_gateway" "gw" {
+    vpc_id = aws_vpc.main.id #associa à sua VPC
+  
+  tags = {
+    Name = "MeuInternetGateway"
+  }
+}
+
+# Criar uma Tabela de Rotas para a Subnet Pública
+resource "aws_route_table" "public_rt" {
+    vpc_id = aws_vpc.main.id
+#Cria rota que envia todo o trafego para a internet via IGW route
+    route = {
+        cidr_block = "0.0.0.0/0" # Permite saída para qualquer destino
+        gateway_id = aws_internet_gateway.id # Passa pelo Internet Gateway
+    }
+
+    tags = {
+     Name = "PublicRouteTable"
+    }
+}
+# Associar a Tabela de Rotas à Subnet Publica
+resource "aws_route_table_association" "public_assoc" {
+    subnet_id = aws_subnet.public_subnet.id
+    route_table_id = aws_route_table.public_rt.id  
+}
+
