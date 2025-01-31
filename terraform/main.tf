@@ -23,7 +23,6 @@ resource "aws_subnet" "public_subnet" {
     tags = {
       Name = "PublicSubnet"
     }
-  
 }
 
 //Criando SubNet Privada (Onde vai ficar o DB ou serviços internos)
@@ -35,6 +34,5 @@ resource "aws_subnet" "private_subnet" {
     tags = {
       Name = "PrivateSubnet"
     }
-  
 }
 
