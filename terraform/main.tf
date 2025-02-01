@@ -64,3 +64,38 @@ resource "aws_route_table_association" "public_assoc" {
     route_table_id = aws_route_table.public_rt.id  
 }
 
+#Criando a Chave SSH para acessar a EC2
+resource "aws_key_pair" "my_key" {
+    key_name = "minha-chave-ssh"
+    public_key = file("~/.ssh/id_rsa.pub") #Chave pública para permitir acesso seguro à instância
+  
+}
+
+#Criando Security Group para a EC2
+resource "aws_security_group" "ec2_sg" {
+    name = "ec2-security-group"
+    description = "Permite acesso SSH e HTTP"
+    vpc_id = aws_vpc.main.id
+#Permite conectar na EC2 via terminal  (SSH = porta 22)
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+#Permite rodar um servidor web (HTTP = porta 80)
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+#Permite saída de qualquer porta (egress = para que a instância possa baixar pacotes)   
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+  
+}
