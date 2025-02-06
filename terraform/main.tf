@@ -151,16 +151,35 @@ resource "aws_security_group" "alb_sg" {
     Name = "ALB_SecurityGroup"
   }
 }
-#Criando o LOADBALANCER
+#Criando o APPLICATION-LOADBALANCER
 resource "aws_lb" "app_load_balancer" {
-    name = "meu-loadlancer"
-    internal = false
-    load_balancer_type = "application"
-    security_groups = [aws_security_group.alb_sg.id]
-    subnets = [aws_subnet.public_subnet.id]
+  name               = "meu-loadlancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = [aws_subnet.public_subnet.id]
 
-    tags = {
-        name = "MeuALB"
-    }
-  
+  tags = {
+    name = "MeuALB"
+  }
+
+}
+# Criando o Target Group (Define para onde o LB vai enviar o tráfego)
+resource "aws_lb_target_group" "alb_tg" {
+  name     = "meu-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.main.id
+
+  health_check {
+    path                = "/"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+
+  tags = {
+    name = "MeuTargetGroup"
+  }
 }
