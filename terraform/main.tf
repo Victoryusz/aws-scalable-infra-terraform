@@ -124,3 +124,43 @@ resource "aws_eip_association" "eip_assoc" {
   instance_id   = aws_instance.web.id
   allocation_id = aws_eip.elastic_ip.id
 }
+
+#Criando o security group do load balancer
+resource "aws_security_group" "alb_sg" {
+  name        = "alb-security-group"
+  description = "Permite acesso HTTP e HTTPS"
+  vpc_id      = aws_vpc.main.id
+
+  # Permitir acesso HTTP (porta 80)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Permitir saída para qualquer destino
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "ALB_SecurityGroup"
+  }
+}
+#Criando o LOADBALANCER
+resource "aws_lb" "app_load_balancer" {
+    name = "meu-loadlancer"
+    internal = false
+    load_balancer_type = "application"
+    security_groups = [aws_security_group.alb_sg.id]
+    subnets = [aws_subnet.public_subnet.id]
+
+    tags = {
+        name = "MeuALB"
+    }
+  
+}
