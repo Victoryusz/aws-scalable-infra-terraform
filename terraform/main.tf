@@ -111,12 +111,16 @@ resource "aws_instance" "n" {
     Name = "MeuServidorEC2"
   }
 }
-#Criando um Elastc IP (IP-Estatico para a EC2)
+#Criando um Elastic IP (IP-Estatico para a EC2)
 resource "aws_eip" "elastic_ip" {
-    domain = "vpc"
+  domain = "vpc"
 
-    tags = {
-        Name = "MeuElasticIP"
-    }
+  tags = {
+    Name = "MeuElasticIP"
+  }
 }
-
+#Associando o Elastic IP ao EC2!
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.web.id
+  allocation_id = aws_eip.elastic_ip.id
+}
