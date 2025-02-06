@@ -183,3 +183,20 @@ resource "aws_lb_target_group" "alb_tg" {
     name = "MeuTargetGroup"
   }
 }
+#Registrar a EC2 no Load Balancer (Adiciona o EC2 como destino do loadBalancer)
+resource "aws_lb_target_attachment" "tg_attachment" {
+  target_group_arn = aws_lb_target_group.alb_tg.arn
+  target_id        = "aws_instance.web.id"
+  port             = 80
+}
+#Criar a Regra de Encaminhamento ou "Listener"
+resource "aws_lb_listener" "alb_listener"{
+    load_balancer_arn = aws_lb.app_load_balancer.arn
+    port = 80
+    protocol = "HTTP"
+
+    default_action {
+      type = "forward"
+      target_group_arn = aws_lb_target_group.alb_tg.arn
+    }
+}
