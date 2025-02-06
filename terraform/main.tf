@@ -105,9 +105,18 @@ resource "aws_instance" "n" {
   instance_type   = "t2.micro"
   subnet_id       = aws_subnet.public_subnet.id
   security_groups = [aws_security_group.ec2_sg.name]
-  key_name        = aws_key_pair.my_key_name
+  key_name        = aws_key_pair.my_key.key_name
 
   tags = {
     Name = "MeuServidorEC2"
   }
 }
+#Criando um Elastc IP (IP-Estatico para a EC2)
+resource "aws_eip" "elastic_ip" {
+    domain = "vpc"
+
+    tags = {
+        Name = "MeuElasticIP"
+    }
+}
+
