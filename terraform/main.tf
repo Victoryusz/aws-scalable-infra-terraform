@@ -221,3 +221,20 @@ resource "aws_launch_template" "lt_web" {
     }
   }
 }
+#Criando o Auto-Scaling-Group (ASG)
+resource "aws_autoscaling_group" "asg_web" {
+  desired_capacity = 2
+  min_size = 1
+  max_size = 3
+  vpc_zone_identifier = [aws_subnet.public_subnet.id]
+  launch_template {
+    id = aws_launch_template.lt_web.id
+    version = "$Lastest"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "ASG-Instance"
+    propagate_at_launch = true
+  }
+}
