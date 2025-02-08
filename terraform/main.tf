@@ -190,13 +190,34 @@ resource "aws_lb_target_attachment" "tg_attachment" {
   port             = 80
 }
 #Criar a Regra de Encaminhamento ou "Listener"
-resource "aws_lb_listener" "alb_listener"{
-    load_balancer_arn = aws_lb.app_load_balancer.arn
-    port = 80
-    protocol = "HTTP"
+resource "aws_lb_listener" "alb_listener" {
+  load_balancer_arn = aws_lb.app_load_balancer.arn
+  port              = 80
+  protocol          = "HTTP"
 
-    default_action {
-      type = "forward"
-      target_group_arn = aws_lb_target_group.alb_tg.arn
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.alb_tg.arn
+  }
+}
+# Criando Launch Template OU modelos de instâncias EC2 para o auto scalling
+resource "aws_launch_template" "lt_web" {
+  name_prefix   = "web-template"
+  image_id      = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.my_key.key_name
+
+#Configura segurança e rede (Security Group, IP público..)
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.ec2_sg.id]
+    subnet_id                   = aws_subnet.public_subnet.id
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "InstanciaAutoScaling"
     }
+  }
 }
